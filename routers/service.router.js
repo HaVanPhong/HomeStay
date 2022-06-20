@@ -5,12 +5,15 @@ const {
   getServiceByRoom,
   createServiceForRoom,
   updateServiceForRoom,
-  deleteService
-}= require("../controllers/service.controller")
+  deleteService,
+  getAllService
+}= require("../controllers/service.controller");
+const { getAll } = require("../controllers/room.controller");
 const router= express.Router();
 
 router
   .route("")
+  .get(asyncHandle(getAllService))
   .post(asyncHandle(createServiceForRoom))
   
 

@@ -7,7 +7,8 @@ const {
   createRoom,
   updateRoom,
   deleteRoom,
-  getRoomById
+  getRoomById,
+  getRoomByLocationSearch
 }= require("../controllers/room.controller")
 
 router
@@ -20,6 +21,8 @@ router
   .get(asyncHandle(getRoomById))
   .patch(asyncHandle(updateRoom))
   .delete(asyncHandle(deleteRoom))  
-
+router
+  .route("/search/:key")
+  .get(asyncHandle(getRoomByLocationSearch));
 
 module.exports= router;

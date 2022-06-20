@@ -2,6 +2,9 @@ const ErrorResponse = require("../helpers/ErrorResponse");
 const serviceModel= require("../models/service.model")
 
 module.exports= {
+  getAllService: async (req, res, next)=>{
+    return res.status(200).json(await serviceModel.find());
+  },
   getServiceByRoom: async (req, res, next)=>{
     let idRoom= req.params.id;
     let services= await serviceModel.find({id_room: idRoom});
