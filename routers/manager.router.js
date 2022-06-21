@@ -8,7 +8,8 @@ const {
   register,
   login,
   deleteManager,
-  updateManager
+  updateManager,
+  getManagerById
 } = require("../controllers/manager.controler")
 
 router
@@ -23,5 +24,6 @@ router
   .route("/:id")
   .delete(asyncHandle(deleteManager))
   .patch(asyncHandle(updateManager))
+  .get(asyncHandle(getManagerById))
 
 module.exports= router;

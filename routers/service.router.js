@@ -6,9 +6,9 @@ const {
   createServiceForRoom,
   updateServiceForRoom,
   deleteService,
-  getAllService
+  getAllService,
+  getServiceById
 }= require("../controllers/service.controller");
-const { getAll } = require("../controllers/room.controller");
 const router= express.Router();
 
 router
@@ -23,5 +23,8 @@ router
   .delete(asyncHandle(deleteService))
   .patch(asyncHandle(updateServiceForRoom))
 
+router
+  .route("/item/:id")
+  .get(asyncHandle(getServiceById))  
 
 module.exports= router;

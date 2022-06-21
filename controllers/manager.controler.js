@@ -29,5 +29,10 @@ module.exports= {
     let id= req.params.id;
     let mng= await managerModel.findOneAndUpdate({_id: id}, req.body, {new: true})
     return res.status(200).json(mng);
+  },
+  getManagerById: async (req, res, next)=>{
+    let id= req.params.id;
+    let mng= await managerModel.findById(id);
+    return res.status(200).json(mng);
   }
 }

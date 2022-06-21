@@ -3,11 +3,12 @@ const serviceModel= require("../models/service.model")
 
 module.exports= {
   getAllService: async (req, res, next)=>{
-    return res.status(200).json(await serviceModel.find());
+    let services= await serviceModel.find().populate("id_room");
+    return res.status(200).json(services);
   },
   getServiceByRoom: async (req, res, next)=>{
     let idRoom= req.params.id;
-    let services= await serviceModel.find({id_room: idRoom});
+    let services= await serviceModel.find({id_room: idRoom}).populate("id_room");
     return res.status(200).json(services);
   },
   createServiceForRoom: async (req, res, next)=>{
