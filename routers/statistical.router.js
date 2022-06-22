@@ -6,7 +6,8 @@ const {
   getAll,
   getStatisticalOfRoom,
   createStatistical,
-  deleteStatistical
+  deleteStatistical,
+  confirmBooking
 }= require("../controllers/statistical.controller")
 
 router
@@ -18,4 +19,9 @@ router
   .route("/:id")
   .get(asyncHandle(getStatisticalOfRoom))  
   .delete(asyncHandle(deleteStatistical))
+
+router
+  .route("/confirm/:id/:otp")
+  .patch(asyncHandle(confirmBooking))  
+  
 module.exports= router;

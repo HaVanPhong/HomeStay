@@ -6,7 +6,7 @@ const ErrorResponse= require("../helpers/ErrorResponse");
 
 module.exports= {
   getAll: async (req, res, next)=>{
-    let statisticals= await statisticalModel.find().populate("id_customer");
+    let statisticals= await statisticalModel.find({confirm: "1"}).populate("id_customer");
     return res.status(200).json(statisticals);
   },
   getStatisticalOfRoom: async (req, res, next)=>{
@@ -43,7 +43,9 @@ module.exports= {
     if (body.id_service){
       stttc.id_service= body.id_service
     }
+    let otp= Math.floor(Math.random()*10)+""+ Math.floor(Math.random()*10)+ ""+ Math.floor(Math.random()*10)+""+Math.floor(Math.random()*10) ;
 
+    stttc.confirm= otp;
     let statistical= await statisticalModel.create(stttc);
     var today = new Date();
     var date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
@@ -52,7 +54,7 @@ module.exports= {
     let option= {
       email: customer.email,
       subject: "THÔNG BÁO ĐẶT DỊCH VỤ THÀNH CÔNG",
-      html: `<h1>Xin chân trọng thông báo, quý khách đã đặt dịch vụ homestay thành công ${dateTime}, Vui lòng chuẩn bị số tiền: ${body.total} $</h1>`
+      html: `<h1>Xin chân trọng thông báo, quý khách đã đặt dịch vụ homestay thành công vào thời gian ${dateTime}, Vui lòng chuẩn bị số tiền: ${body.total} $. Để xác thực thông tin. Hãy nhập mã xác nhận sau ${otp}</h1>`
     }
     await sendMail(option);
 
@@ -61,6 +63,29 @@ module.exports= {
   deleteStatistical: async (req, res, next)=>{
     let id= req.params.id;
     return res.status(200).json(await statisticalModel.findByIdAndDelete(id))
+  },
+  confirmBooking: async (req, res, next)=>{
+    let idStatistical= req.params.id;
+    let otp= req.params.otp;
+
+    if (!otp){
+      throw new ErrorResponse(403, "OTP must provide");
+    }
+
+    let stt= await statisticalModel.findOne({_id: idStatistical, confirm: otp})
+    if (!stt){
+      throw new ErrorResponse(404, "OTP or id statistical incorrect");
+    }
+
+    let body={
+      confirm: "1"
+    }
+    let result= await statisticalModel.findByIdAndUpdate(idStatistical, body, {new: true});
+    if (!result){
+      throw new ErrorResponse(404, "Not found statistical. Check id statistical. Please");
+    }
+    return res.status(200).json(result);
   }
+
 
 }

@@ -16,6 +16,10 @@ const statisticalSchema= mongoose.Schema({
   id_customer: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "customer"
+  },
+  confirm: {
+    type: String,
+    default: "0"
   }
 }, {
   versionKey: false,
