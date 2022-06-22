@@ -34,7 +34,7 @@ module.exports= {
   },
   getServiceById: async (req, res, next)=>{
     let id= req.params.id;
-    return res.status(200).json(await serviceModel.findByIdAndDelete(id));
+    return res.status(200).json(await serviceModel.findById(id));
   }
 
 }
