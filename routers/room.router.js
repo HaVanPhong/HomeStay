@@ -8,7 +8,8 @@ const {
   updateRoom,
   deleteRoom,
   getRoomById,
-  getRoomByLocationSearch
+  getRoomByLocationSearch,
+  getRoomByUser
 }= require("../controllers/room.controller")
 
 router
@@ -24,5 +25,7 @@ router
 router
   .route("/search/:key")
   .get(asyncHandle(getRoomByLocationSearch));
-
+router
+  .route("/user/:id")
+  .get(asyncHandle(getRoomByUser))
 module.exports= router;

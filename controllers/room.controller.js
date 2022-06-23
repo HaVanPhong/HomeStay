@@ -35,5 +35,10 @@ module.exports= {
       return ele?.id_location?.name_location?.includes(str);
     })
     return res.status(200).json(rooms2);
+  },
+  getRoomByUser: async (req, res, next)=>{
+    let idUser= req.params.id;
+    let room= await roomModel.findOne({id_user: idUser}).populate("id_location").populate("id_user");
+    return res.status(200).json(room);
   }
 }
