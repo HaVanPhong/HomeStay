@@ -21,6 +21,17 @@ module.exports= {
       throw new ErrorResponse(401, "Total must provide");
     }
 
+    let idRoom= body.id_room;
+    if (!idRoom){
+      throw new ErrorResponse(401, "id_room must provide");
+    }
+
+    // let staExists= await statisticalModel.findOne({id_room: idRoom, timeLeave: {$ne: null}})
+    // if (staExists){
+    //   throw new ErrorResponse(404, "This room is already booked");
+    // }
+
+
     let customer= await customerModel.findOne({email: body.email});
     if (!customer){
       customer= {}
@@ -81,6 +92,14 @@ module.exports= {
       confirm: "1"
     }
     let result= await statisticalModel.findByIdAndUpdate(idStatistical, body, {new: true});
+    if (!result){
+      throw new ErrorResponse(404, "Not found statistical. Check id statistical. Please");
+    }
+    return res.status(200).json(result);
+  },
+  checkInCheckOut: async (req, res, next)=>{
+    let idStatistical= req.params.id;
+    let result= await statisticalModel.findByIdAndUpdate(idStatistical, req.body, {new: true});
     if (!result){
       throw new ErrorResponse(404, "Not found statistical. Check id statistical. Please");
     }

@@ -20,10 +20,18 @@ const statisticalSchema= mongoose.Schema({
   confirm: {
     type: String,
     default: "0"
+  },
+  timeCome: {
+    type: String,
+    default: null
+  },
+  timeLeave: {
+    type: String,
+    default: null
   }
 }, {
   versionKey: false,
   timestamps: true
 })
 
-module.exports= mongoose.model("statistical", statisticalSchema);
+module.exports= mongoose.model("statisticals", statisticalSchema);

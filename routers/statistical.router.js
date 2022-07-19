@@ -7,7 +7,8 @@ const {
   getStatisticalOfRoom,
   createStatistical,
   deleteStatistical,
-  confirmBooking
+  confirmBooking,
+  checkInCheckOut
 }= require("../controllers/statistical.controller")
 
 router
@@ -19,6 +20,7 @@ router
   .route("/:id")
   .get(asyncHandle(getStatisticalOfRoom))  
   .delete(asyncHandle(deleteStatistical))
+  .patch(asyncHandle(checkInCheckOut))
 
 router
   .route("/confirm/:id/:otp")
