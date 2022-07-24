@@ -24,6 +24,10 @@ const roomSchema= mongoosse.Schema({
     type: mongoosse.SchemaTypes.ObjectId,
     ref: "manager",
     unique: true
+  },
+  isFree: {
+    type: Number,
+    default: 1
   }
 }, {
   versionKey: false,

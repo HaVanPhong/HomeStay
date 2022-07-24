@@ -6,12 +6,12 @@ const ErrorResponse= require("../helpers/ErrorResponse");
 
 module.exports= {
   getAll: async (req, res, next)=>{
-    let statisticals= await statisticalModel.find({confirm: "1"}).populate("id_customer");
+    let statisticals= await statisticalModel.find({confirm: "1"}).populate("id_customer").populate("id_room");
     return res.status(200).json(statisticals);
   },
   getStatisticalOfRoom: async (req, res, next)=>{
     let idRoom = req.params.id;
-    let statisticals= await statisticalModel.find({id_room: idRoom}).populate("id_customer");
+    let statisticals= await statisticalModel.find({id_room: idRoom}).populate("id_customer").populate("id_room");
     return res.status(200).json(statisticals);
   },
   createStatistical: async(req, res, next)=>{
@@ -25,13 +25,14 @@ module.exports= {
     if (!idRoom){
       throw new ErrorResponse(401, "id_room must provide");
     }
-
-    // let staExists= await statisticalModel.findOne({id_room: idRoom, timeLeave: {$ne: null}})
-    // if (staExists){
-    //   throw new ErrorResponse(404, "This room is already booked");
-    // }
-
-
+    let checkRoom= await roomModel.findOne({
+      _id: idRoom,
+      isFree: 0
+    })
+    if (checkRoom){
+      throw new ErrorResponse(401, "This room already booked")
+    }
+    await roomModel.findByIdAndUpdate(idRoom, {isFree: 0})
     let customer= await customerModel.findOne({email: body.email});
     if (!customer){
       customer= {}
@@ -99,7 +100,14 @@ module.exports= {
   },
   checkInCheckOut: async (req, res, next)=>{
     let idStatistical= req.params.id;
-    let result= await statisticalModel.findByIdAndUpdate(idStatistical, req.body, {new: true});
+    let {...body}= req.body;
+    let timeOut= body?.timeLeave;
+    if (timeOut){
+      let st= await statisticalModel.findById(idStatistical);
+      let idRoom= st.id_room._id;
+      await roomModel.findByIdAndUpdate(idRoom, {isFree: 1})
+    }
+    let result= await statisticalModel.findByIdAndUpdate(idStatistical, body, {new: true});
     if (!result){
       throw new ErrorResponse(404, "Not found statistical. Check id statistical. Please");
     }

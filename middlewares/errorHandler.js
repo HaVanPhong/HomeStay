@@ -1,7 +1,7 @@
 module.exports = (err, req, res, next) => {
   let error = { ...err };
 
-  if (err.name === "CastError") {
+  if (err?.name === "CastError") {
     error.statusCode = 404;
     error.message = `Resource not found`;
   }
@@ -21,7 +21,7 @@ module.exports = (err, req, res, next) => {
     error.message = err.message;
   }
 
-  if (err.code === 11000) {
+  if (err?.code === 11000) {
     error.statusCode = 400;
     error.message = "Duplicate resource";
   }
