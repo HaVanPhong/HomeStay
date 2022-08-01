@@ -12,6 +12,14 @@ module.exports= {
   },
   createRoom: async(req, res, next)=>{
     let {...body}= req.body
+    let checkRoom= await Room.findOne({
+      where: {
+        id_user: body.id_user
+      }
+    })
+    if (checkRoom){
+      throw new ErrorResponse("Staff đã có nhiệm vụ quản lý homestay khác", 401)
+    }
     let room= await Room.create(body)
     return res.status(201).json(room)
   },
@@ -60,13 +68,16 @@ module.exports= {
   },
   getRoomByUser: async(req, res, next)=>{
     let idUser= req.params.id_user
-    let room= await Room.findAll({
+    let room= await Room.findOne({
       where: {
         id_user: idUser
       },
       include: ['manager', 'destination']
     })
-
-    return res.status(200).json(room)
+    if (!room){
+      return res.status(200).json({})
+    }else {
+      return res.status(200).json(room)
+    }
   }
 }
